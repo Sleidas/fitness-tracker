@@ -1,0 +1,25 @@
+
+title {
+	color: #4169E1;
+}
+
+body {
+  background-color: #121212; 
+  color: #e0e0e0;          
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+a.btn {
+  background-color: #1f6feb;
+  border-color: #1f6feb;
+  color: white;
+}
+
+a.btn:hover {
+  background-color: #145ecb;
+  border-color: #145ecb;
+}
+
+h1 {
+  color: #4fc3f7;
+}
