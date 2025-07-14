@@ -17,7 +17,7 @@ public class User {
 	@Column(unique = true) // Enforces username must be unique in the database
 	private String username;
 
-	@NotBlank(message = "Email is required") // MAkes sure email is not empty
+	@NotBlank(message = "Email is required") // Makes sure email is not empty
 	@Email(message = "Invalid email format") // Checks if the email is valid format
 	@Column(unique = true) // Email must be unique
 	private String email;

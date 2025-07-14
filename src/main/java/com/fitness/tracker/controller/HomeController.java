@@ -1,4 +1,4 @@
-package com.fitness.tracker;
+package com.fitness.tracker.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +13,4 @@ public class HomeController {
         return "home";
     }
     
-    @GetMapping("/goals")
-    public String goals() {
-        return "goals"; // corresponds to goals.html
-    }
 }
