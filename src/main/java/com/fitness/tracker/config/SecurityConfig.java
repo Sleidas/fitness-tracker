@@ -14,7 +14,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(auth -> auth
 				// Allow anyone to access the home page, login, register, and static resources
-				.requestMatchers("/", "/login", "/register", "/css/**", "/h2-console/**").permitAll()  //css so styles load in even before log in
+				.requestMatchers("/", "/login", "/register", "/images/**", "/css/**", "/h2-console/**").permitAll()  //css so styles load in even before log in
 				// All other requests need authentication
 				.anyRequest().authenticated()).formLogin(form -> form
 						// login page URL

@@ -3,11 +3,45 @@
 
 <head> 
 	<title>Login</title>
-	<meta charset="UTF-8">		
+	<meta charset="UTF-8">
+	
+	<!-- Bootstrap-->		
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- My custom css-->
+	<link href="/css/style.css" rel="stylesheet">
+	<style>
+		/*Css styles specific to this page */
+		.form-card {
+		          background-color: #1e1e1e; /* Dark grey background for the card */
+		          padding: 2rem;             /* Space inside the card */
+		          border-radius: 12px;       /* Rounded corners */
+		          box-shadow: 0 0 15px rgba(0,0,0,0.5); /* Soft shadow around the card */
+		      }
+		       .logo-img {
+		           max-width: 150px; /*Limits logo max width */
+		           margin-bottom: 1rem; /*Space below logo */
+		       }
+    </style>
 </head>
+<body class="bg-dark text-light d-flex justify-content-center align-items-center vh-100">
+	<!--
+	    body tag has several Bootstrap utility classes:
+	    - bg-dark: dark background for the whole page
+	    - text-light: light coloured text by default
+	    - d-flex: sets display flex to center contents with ease
+	    - justify-content-center: horizontal center
+	    - align-items-center: vertical center
+	    - vh-100: 100% viewport height, so container fills screen height
+	-->
+	
+	<!-- Outer container centers the card vertically and horizontally -->
+	  <div class="form-card text-center">
+		
+		<!-- Logo image centered -->
+	 <img src="/images/FT.png" alt="Fitness Tracker Logo" class="logo-img">
 
-<body>
-    <h1>Login</h1>
+	 <!-- Page heading -->
+	  <h2 class="mb-4 text-primary">Login</h2>
 	
 	<!-- Show error message if login failed -->
 	<div th:if="${param.error}">
@@ -19,21 +53,30 @@
 	    <p style="color: green;">You have been logged out successfully.</p>
 	</div>
 	
-	<form th:action="@{/login}" method="post">
-	    <!-- Username input -->
-	    <label for="username">Username:</label>
-	    <input type="text" id="username" name="username" /><br/>
+	<!-- Login form -->
+	    <form th:action="@{/login}" method="post">
 
-	    <!-- Password input -->
-	    <label for="password">Password:</label>
-	    <input type="password" id="password" name="password" /><br/>
+		      <!-- Username input -->
+		      <div class="mb-3 text-start">
+		        <label for="username" class="form-label">Username:</label>
+		        <input type="text" id="username" name="username" class="form-control" required>
+		      </div>
 
-	    <!-- Submit button -->
-	    <button type="submit">Login</button>
-	</form>
+		      <!-- Password input -->
+		      <div class="mb-3 text-start">
+		        <label for="password" class="form-label">Password:</label>
+		        <input type="password" id="password" name="password" class="form-control" required>
+		      </div>
+
+		      <!-- Submit button full width -->
+		      <button type="submit" class="btn btn-primary w-100">Login</button>
+		    </form>
+
+		    <!-- Link to register -->
+		    <p class="mt-3">
+		      Don't have an account? <a th:href="@{/register}" class="text-info">Register here</a>
+		    </p>
+		  </div>
 		</body>
-		
-		    <!-- Link to register page -->
-		    <p>Don't have an account? <a th:href="@{/register}">Register here</a></p>
-		</body>
+
 		</html>
