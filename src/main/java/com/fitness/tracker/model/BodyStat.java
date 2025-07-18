@@ -47,15 +47,20 @@ public class BodyStat {
 		return weightKg / (heightMetres * heightMetres);
 	}
 
-	public String calculateBmiCategory(double bmi) {
-		if (bmi < 18.5)
-			return "Underweight";
-		else if (bmi < 25.0)
-			return "Normal weight";
-		else if (bmi < 30.0)
-			return "Overweight";
-		else
-			return "Obese";
+	public String calculateBmiCategory(Double bmi) {
+	    if (bmi == null) return "Unknown";
+	    if (bmi < 18.5)
+	        return "Underweight";
+	    else if (bmi < 25.0)
+	        return "Normal weight";
+	    else if (bmi < 30.0)
+	        return "Overweight";
+	    else
+	        return "Obese";
+	}
+	
+	public String calculateBmiCategory() {
+	    return calculateBmiCategory(this.bmi);
 	}
 
 	@PrePersist // runs before entity is inserted into database

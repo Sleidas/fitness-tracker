@@ -12,10 +12,11 @@ public class WorkoutLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Title is required")
-    private String title;
+    @NotNull(message = "Workout type is required")
+    private String type;
 
-    private String description;
+    @NotNull(message = "Duration is required")
+    private Integer durationMinutes;
 
     private double caloriesBurned;
 
@@ -28,14 +29,14 @@ public class WorkoutLog {
 
     public WorkoutLog() {}
 
-    public WorkoutLog(String title, String description, double caloriesBurned, LocalDate workoutDate, User user) {
-        this.title = title;
-        this.description = description;
+    public WorkoutLog(String type, Integer durationMinutes, double caloriesBurned, LocalDate workoutDate, User user) {
+        this.type = type;
+        this.durationMinutes = durationMinutes;
         this.caloriesBurned = caloriesBurned;
         this.workoutDate = workoutDate;
         this.user = user;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -44,20 +45,20 @@ public class WorkoutLog {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getType() {
+        return type;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getDescription() {
-        return description;
+    public Integer getDurationMinutes() {
+        return durationMinutes;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDurationMinutes(Integer durationMinutes) {
+        this.durationMinutes = durationMinutes;
     }
 
     public double getCaloriesBurned() {

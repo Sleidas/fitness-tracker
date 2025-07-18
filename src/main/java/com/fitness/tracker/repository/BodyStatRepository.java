@@ -13,4 +13,5 @@ public interface BodyStatRepository extends JpaRepository<BodyStat, Long> {
     List<BodyStat> findByUser(User user);
 	
     List<BodyStat> findByUserOrderByDateDesc(User user);  // Gets all body stats of a user, most recent first
+    
 }

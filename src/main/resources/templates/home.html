@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Fitness Tracker Dashboard</title>
 	
-	
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 	
@@ -41,11 +40,50 @@
 		                    <h3>Input Data</h3>
 		                    <!-- Your input form or content here -->
 		                    <p>Track your workouts and progress here.</p>
-		                </div>
-		            </div>
+							
+							<!-- button to trigger modal for body stats-->
+							<button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#bodyStatModal">
+							  Add Body Stats
+							</button>
+							
+							<!-- button to trigger modal for workout-->
+							<button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#workoutLogModal">
+							  Log Workout
+							</button>
+							
+							    <hr class="my-4" />
+
+							    <!-- Show BMI and Category -->
+								
+								<div th:if="${latestBodyStat == null}">
+								  No body stats yet.
+								</div>
+							    <div th:if="${latestBodyStat != null}">
+							      <p>BMI: <span th:text="${T(java.lang.Math).round(latestBodyStat.bmi * 10) / 10.0}">--</span></p>
+								  <p>BMI Category:
+								    <span th:switch="${latestBodyStat.calculateBmiCategory(latestBodyStat.bmi)}">
+								      <span th:case="'Underweight'" th:text="${latestBodyStat.calculateBmiCategory(latestBodyStat.bmi)}" style="color: blue;"></span>
+								      <span th:case="'Normal weight'" th:text="${latestBodyStat.calculateBmiCategory(latestBodyStat.bmi)}" style="color: green;"></span>
+								      <span th:case="'Overweight'" th:text="${latestBodyStat.calculateBmiCategory(latestBodyStat.bmi)}" style="color: orange;"></span>
+								      <span th:case="'Obese'" th:text="${latestBodyStat.calculateBmiCategory(latestBodyStat.bmi)}" style="color: red;"></span>
+								      <span th:case="*">Unknown</span>
+								    </span>
+								  </p>
+							    </div>
+
+							    <!-- Show recent workout date and calories burned -->
+								<div th:if="${latestWorkout == null}">
+								  No workout logs yet.
+								</div>
+							    <div th:if="${latestWorkout != null}">
+							      <p>Most Recent Workout Date: <span th:text="${latestWorkout.workoutDate}">--</span></p>
+							      <p>Calories Burned: <span th:text="${latestWorkout.caloriesBurned}">--</span></p>
+							    </div>
+							  </div>
+							</div>
 
 		            <!-- Invite Friends -->
-		            <div class="col-md-6">
+					 <div class="col-md-6">
 		                <div class="dashboard-card">
 		                    <h3>Invite Friends</h3>
 		                    <!-- Invite UI here -->
@@ -73,6 +111,82 @@
 
 		        </div>
 		    </div>
-		</body>
+			
+			    <!-- Modal popup for body stats -->
+				
+			    <div class="modal fade" id="bodyStatModal" tabindex="-1" aria-labelledby="bodyStatModalLabel" aria-hidden="true">
+					
+			        <div class="modal-dialog">
+			            <div class="modal-content bg-dark text-light rounded-4 shadow">
+			                <div class="modal-header">
+			                    <h5 class="modal-title" id="bodyStatModalLabel">Add Body Stats</h5>
+			                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			                </div>
+							
+			                <form method="post" action="/bodystats">
+			                    <div class="modal-body">
+			                        <div class="mb-3">
+			                            <label for="height" class="form-label">Height (cm)</label>
+			                            <input type="number" step="0.1" class="form-control" id="height" name="heightCm" required>
+			                        </div>
+			                        <div class="mb-3">
+			                            <label for="weight" class="form-label">Weight (kg)</label>
+			                            <input type="number" step="0.1" class="form-control" id="weight" name="weightKg" required>
+			                        </div>
+			                    </div>
+			                    <div class="modal-footer">
+			                        <button type="submit" class="btn btn-success">Save Stats</button>
+			                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			                    </div>
+			                </form>
+							
+			            </div>
+			        </div>
+			    </div>
 
-		</html>
+				<!-- Same form for workout log with different inputs based off workout entity-->
+				<div class="modal fade" id="workoutLogModal" tabindex="-1" aria-labelledby="workoutLogModalLabel" aria-hidden="true">
+				    <div class="modal-dialog">
+				        <div class="modal-content bg-dark text-light rounded-4 shadow">
+				            <div class="modal-header">
+				                <h5 class="modal-title" id="workoutLogModalLabel">Log a Workout</h5>
+				                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+				            </div>
+
+				            <form method="post" th:action="@{/workoutlogs}" th:object="${workoutLog}">
+				                <div class="modal-body">
+				                    <div class="mb-3">
+				                        <label for="type" class="form-label">Workout Type</label>
+				                        <input type="text" class="form-control" id="type" th:field="*{type}" required>
+										<div th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="text-danger"></div>
+				                    </div>
+				                    <div class="mb-3">
+				                        <label for="duration" class="form-label">Duration (minutes)</label>
+				                        <input type="number" class="form-control" id="duration" th:field="*{durationMinutes}" required>
+										<div th:if="${#fields.hasErrors('durationMinutes')}" th:errors="*{durationMinutes}" class="text-danger"></div>
+				                    </div>
+				                    <div class="mb-3">
+				                        <label for="calories" class="form-label">Calories Burned</label>
+				                        <input type="number" class="form-control" id="calories" th:field="*{caloriesBurned}" required>
+										<div th:if="${#fields.hasErrors('caloriesBurned')}" th:errors="*{caloriesBurned}" class="text-danger"></div>
+				                    </div>
+									<div class="mb-3">
+									    <label for="workoutDate" class="form-label">Workout Date</label>
+									    <input type="date" class="form-control" id="workoutDate" th:field="*{workoutDate}" required>
+									    <div th:if="${#fields.hasErrors('workoutDate')}" th:errors="*{workoutDate}" class="text-danger"></div>
+									</div>
+				                </div>
+				                <div class="modal-footer">
+				                    <button type="submit" class="btn btn-success">Save Workout</button>
+				                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				                </div>
+				            </form>
+				        </div>
+				    </div>
+				</div>
+				
+			    <!-- Bootstrap JS -->
+			    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+			</body>
+			</html>

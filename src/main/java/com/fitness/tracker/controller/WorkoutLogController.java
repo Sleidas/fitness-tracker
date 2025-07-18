@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.fitness.tracker.model.BodyStat;
 import com.fitness.tracker.model.User;
 import com.fitness.tracker.model.WorkoutLog;
+import com.fitness.tracker.service.BodyStatService;
 import com.fitness.tracker.service.UserService;
 import com.fitness.tracker.service.WorkoutLogService;
 
@@ -28,13 +30,9 @@ public class WorkoutLogController {
 
     @Autowired
     private UserService userService;
-
-    // Show form to input a new WorkoutLog
-    @GetMapping("/workoutlogs/new")
-    public String showWorkoutLogForm(Model model) {
-        model.addAttribute("workoutLog", new WorkoutLog());
-        return "workoutlogs/form"; // Thymeleaf template for the workout log form
-    }
+    
+    @Autowired
+    private BodyStatService bodyStatService;
 
     // Handle form submission to save WorkoutLog with validation
     @PostMapping("/workoutlogs")
@@ -42,7 +40,31 @@ public class WorkoutLogController {
                                  @AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (bindingResult.hasErrors()) {
             // Return the form with validation errors
-            return "workoutlogs/form";
+            model.addAttribute("org.springframework.validation.BindingResult.workoutLog", bindingResult);
+            model.addAttribute("workoutLog", workoutLog);
+
+            // ==== BEGIN ADDED CODE to provide required model attributes on error ====
+            Optional<User> userOpt = userService.findByUsername(userDetails.getUsername());
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+
+                // Add username to model for home page
+                model.addAttribute("username", userDetails.getUsername());
+
+                // Add latest BodyStat if exists
+                BodyStat latestBodyStat = bodyStatService.getLatestBodyStat(user);
+                if (latestBodyStat != null) {
+                    model.addAttribute("latestBodyStat", latestBodyStat);
+                }
+
+                // Add latest WorkoutLog if exists
+                WorkoutLog latestWorkout = workoutLogService.getLatestWorkoutLog(user);
+                if (latestWorkout != null) {
+                    model.addAttribute("latestWorkout", latestWorkout);
+                }
+            }
+
+            return "home";
         }
 
         Optional<User> userOpt = userService.findByUsername(userDetails.getUsername());
@@ -54,9 +76,8 @@ public class WorkoutLogController {
 
         User user = userOpt.get();
         workoutLog.setUser(user);
-        workoutLog.setWorkoutDate(LocalDate.now());
         workoutLogService.saveWorkoutLog(workoutLog);
 
-        return "redirect:/workoutlogs"; // Redirect to list or summary page
+        return "redirect:/"; // Redirect to home
     }
 }

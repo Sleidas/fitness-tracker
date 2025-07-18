@@ -63,6 +63,6 @@ public class BodyStatController {
         bodyStat.setDate(LocalDate.now());
         bodyStatService.saveBodyStat(bodyStat);
 
-        return "redirect:/bodystats";
+        return "redirect:/";
     }
 }
