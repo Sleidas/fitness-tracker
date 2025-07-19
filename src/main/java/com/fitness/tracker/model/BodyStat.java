@@ -21,6 +21,8 @@ public class BodyStat {
 	private double weightKg; // weight in kg
 
 	private double bmi; // calculated after input
+	
+	@NotNull
 	private LocalDate date;
 
 	@ManyToOne

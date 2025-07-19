@@ -14,4 +14,6 @@ public interface WorkoutLogRepository extends JpaRepository<WorkoutLog, Long> {
     List<WorkoutLog> findByUser(User user);
     
     List<WorkoutLog> findByUserOrderByWorkoutDateDesc(User user);  // Gets all workout logs for a user, recent first
+    
+    List<WorkoutLog> findByUserOrderByWorkoutDateAsc(User user);
 }

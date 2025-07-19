@@ -26,6 +26,10 @@ public class BodyStatService {
     public List<BodyStat> getBodyStatsByUser(User user) {
         return bodyStatRepository.findByUser(user);
     }
+    
+    public List<BodyStat> getAllBodyStats(User user) {
+        return bodyStatRepository.findByUserOrderByDateAsc(user);
+    }
 
     // get latest BodyStat for a user
     public BodyStat getLatestBodyStat(User user) {

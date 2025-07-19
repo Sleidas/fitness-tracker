@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.fitness.tracker.model.BodyStat;
 import com.fitness.tracker.model.User;
 import com.fitness.tracker.model.WorkoutLog;
 import com.fitness.tracker.repository.WorkoutLogRepository;
@@ -28,6 +29,11 @@ public class WorkoutLogService {
         return workoutLogRepository.findByUser(user);
     }
 
+    //For graph
+    public List<WorkoutLog> getAllWorkoutLogs(User user) {
+        return workoutLogRepository.findByUserOrderByWorkoutDateAsc(user);
+    }
+    
     // Get the most recent workout
     public WorkoutLog getLatestWorkoutLog(User user) {
         List<WorkoutLog> logs = workoutLogRepository.findByUserOrderByWorkoutDateDesc(user);

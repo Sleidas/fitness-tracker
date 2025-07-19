@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.fitness.tracker.model.BodyStat;
 import com.fitness.tracker.model.User;
+import com.fitness.tracker.model.WorkoutLog;
 import com.fitness.tracker.service.BodyStatService;
 import com.fitness.tracker.service.UserService;
+import com.fitness.tracker.service.WorkoutLogService;
 
 import jakarta.validation.Valid;
 
@@ -34,25 +36,47 @@ public class BodyStatController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private WorkoutLogService workoutLogService;
 
-    // Shows form to input new BodyStat
-    @GetMapping("/bodystats/new")
-    public String showBodyStatForm(Model model) {
-        model.addAttribute("bodyStat", new BodyStat());
-        return "bodystats/form"; // Thymeleaf template for form
-    }
-
-    // Handle form submission to save BodyStat with validation
     @PostMapping("/bodystats")
     public String saveBodyStat(@Valid @ModelAttribute BodyStat bodyStat, BindingResult bindingResult,
-                               @AuthenticationPrincipal UserDetails userDetails, Model model) { //binding result is validation report for form
+                               @AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (bindingResult.hasErrors()) {
-            // Return form with validation errors
-            return "bodystats/form";
+            // Add bindingResult and bodyStat back to model (optional but good)
+            model.addAttribute("org.springframework.validation.BindingResult.bodyStat", bindingResult);
+            model.addAttribute("bodyStat", bodyStat);
+
+            // Add username and related data to model
+            Optional<User> userOpt = userService.findByUsername(userDetails.getUsername());
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+
+                model.addAttribute("username", userDetails.getUsername());
+
+                // Latest BodyStat for display if available
+                BodyStat latestBodyStat = bodyStatService.getLatestBodyStat(user);
+                if (latestBodyStat != null) {
+                    model.addAttribute("latestBodyStat", latestBodyStat);
+                }
+
+                // Latest WorkoutLog for display if available
+                WorkoutLog latestWorkout = workoutLogService.getLatestWorkoutLog(user);
+                if (latestWorkout != null) {
+                    model.addAttribute("latestWorkout", latestWorkout);
+                }
+
+                // Add workoutLog (needed for workout modal form)
+                if (!model.containsAttribute("workoutLog")) {
+                    model.addAttribute("workoutLog", new WorkoutLog());
+                }
+            }
+
+            return "home"; // return back to home page with form errors and all needed data
         }
 
-        Optional<User> userOpt = userService.findByUsername(userDetails.getUsername()); //checks if logged in user is in db
-
+        Optional<User> userOpt = userService.findByUsername(userDetails.getUsername());
         if (userOpt.isEmpty()) {
             model.addAttribute("error", "User not found");
             return "error"; 

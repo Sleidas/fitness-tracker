@@ -63,6 +63,11 @@ public class HomeController {
         if (!model.containsAttribute("workoutLog")) {
             model.addAttribute("workoutLog", new WorkoutLog());
         }
+        
+        if (!model.containsAttribute("bodyStat")) {
+            model.addAttribute("bodyStat", new BodyStat());
+        }
+        
         return "home";
     }
     
