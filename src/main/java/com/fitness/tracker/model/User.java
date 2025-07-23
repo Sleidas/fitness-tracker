@@ -1,5 +1,8 @@
 package com.fitness.tracker.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*; // For JPA annotations so it can map to a database table
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +28,14 @@ public class User {
 	@NotBlank(message = "Password is required")
 	private String password;
 
+	@ManyToMany
+	@JoinTable(
+	    name = "user_friends",
+	    joinColumns = @JoinColumn(name = "user_id"),
+	    inverseJoinColumns = @JoinColumn(name = "friend_id")
+	)
+	private List<User> friends = new ArrayList<>();
+	
 	// Empty constructor
 	public User() {
 	}
@@ -67,5 +78,13 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public List<User> getFriends() {
+	    return friends;
+	}
+
+	public void setFriends(List<User> friends) {
+	    this.friends = friends;
 	}
 }

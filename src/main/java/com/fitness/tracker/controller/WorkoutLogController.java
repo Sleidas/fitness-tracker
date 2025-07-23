@@ -43,7 +43,7 @@ public class WorkoutLogController {
             model.addAttribute("org.springframework.validation.BindingResult.workoutLog", bindingResult);
             model.addAttribute("workoutLog", workoutLog);
 
-            // ==== BEGIN ADDED CODE to provide required model attributes on error ====
+            // to provide required model attributes on error
             Optional<User> userOpt = userService.findByUsername(userDetails.getUsername());
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
@@ -71,7 +71,7 @@ public class WorkoutLogController {
 
         if (userOpt.isEmpty()) {
             model.addAttribute("error", "User not found");
-            return "error"; // or wherever you want to show error page
+            return "error"; 
         }
 
         User user = userOpt.get();

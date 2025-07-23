@@ -68,9 +68,9 @@ public class BodyStatController {
                 }
 
                 // Add workoutLog (needed for workout modal form)
-                if (!model.containsAttribute("workoutLog")) {
-                    model.addAttribute("workoutLog", new WorkoutLog());
-                }
+               // if (!model.containsAttribute("workoutLog")) {
+                //    model.addAttribute("workoutLog", new WorkoutLog());
+               // }
             }
 
             return "home"; // return back to home page with form errors and all needed data

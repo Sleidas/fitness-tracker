@@ -2,6 +2,7 @@ package com.fitness.tracker.repository;
 
 import com.fitness.tracker.model.User; //imports the user details/model
 
+import java.util.List;
 import java.util.Optional; //Handles null values
 
 import org.springframework.data.jpa.repository.JpaRepository;  // JpaRepository interface
@@ -12,6 +13,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // can add custom method queries here..
     Optional<User> findByUsername(String username);  //find by username
     Optional<User> findByEmail(String email);
+    
+    List<User> findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCase(String username, String email);
+
 }
 
 /**
