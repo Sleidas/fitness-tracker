@@ -1,5 +1,6 @@
 package com.fitness.tracker.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.fitness.tracker.dto.LeaderboardEntry;
 import com.fitness.tracker.model.BodyStat;
 import com.fitness.tracker.model.User;
 import com.fitness.tracker.model.WorkoutLog;
 import com.fitness.tracker.service.BodyStatService;
+import com.fitness.tracker.service.LeaderboardService;
 import com.fitness.tracker.service.UserService;
 import com.fitness.tracker.service.WorkoutLogService;
 
@@ -28,6 +31,9 @@ public class HomeController {
 
     @Autowired
     private WorkoutLogService workoutLogService;
+    
+    @Autowired
+    private LeaderboardService leaderboardService;
 	
     @GetMapping("/")
     public String home(Model model) {
@@ -58,7 +64,10 @@ public class HomeController {
             model.addAttribute("latestWorkout", latestWorkout);
         }
         
-        }
+        
+        List<LeaderboardEntry> leaderboard = leaderboardService.getLeaderboard(user, null);
+        model.addAttribute("leaderboard", leaderboard);
+    }
         
         if (!model.containsAttribute("workoutLog")) {
             model.addAttribute("workoutLog", new WorkoutLog());

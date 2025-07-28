@@ -46,13 +46,11 @@ public class UserService {
 	    }
 	    
 	    
-	    public List<UserDTO> searchUsers(String query) { //declares method searchUsers
-	    	//returns a list of userDTO objects
-	    	//This line calls repository to search the database for (username or email) which is query,query
+	    public List<UserDTO> searchUsers(String query) {
 	        List<User> users = userRepository.findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCase(query, query);
 	        return users.stream()
-	                .map(UserDTO::from)
-	                .collect(Collectors.toList());
+	                    .map(UserDTO::from)
+	                    .collect(Collectors.toList());
 	    }
 	    
 	    public void sendInvite(String inviterUsername, Long invitedToId) {

@@ -39,29 +39,13 @@ public class WorkoutLogController {
     public String saveWorkoutLog(@Valid @ModelAttribute WorkoutLog workoutLog, BindingResult bindingResult,
                                  @AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (bindingResult.hasErrors()) {
-            // Return the form with validation errors
             model.addAttribute("org.springframework.validation.BindingResult.workoutLog", bindingResult);
             model.addAttribute("workoutLog", workoutLog);
 
-            // to provide required model attributes on error
             Optional<User> userOpt = userService.findByUsername(userDetails.getUsername());
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
-
-                // Add username to model for home page
-                model.addAttribute("username", userDetails.getUsername());
-
-                // Add latest BodyStat if exists
-                BodyStat latestBodyStat = bodyStatService.getLatestBodyStat(user);
-                if (latestBodyStat != null) {
-                    model.addAttribute("latestBodyStat", latestBodyStat);
-                }
-
-                // Add latest WorkoutLog if exists
-                WorkoutLog latestWorkout = workoutLogService.getLatestWorkoutLog(user);
-                if (latestWorkout != null) {
-                    model.addAttribute("latestWorkout", latestWorkout);
-                }
+                populateHomeModel(user, model);
             }
 
             return "home";
@@ -78,6 +62,28 @@ public class WorkoutLogController {
         workoutLog.setUser(user);
         workoutLogService.saveWorkoutLog(workoutLog);
 
-        return "redirect:/"; // Redirect to home
+        return "redirect:/";
+    }
+
+    private void populateHomeModel(User user, Model model) {
+        model.addAttribute("username", user.getUsername());
+
+        BodyStat latestBodyStat = bodyStatService.getLatestBodyStat(user);
+        if (latestBodyStat != null) {
+            model.addAttribute("latestBodyStat", latestBodyStat);
+        }
+
+        WorkoutLog latestWorkout = workoutLogService.getLatestWorkoutLog(user);
+        if (latestWorkout != null) {
+            model.addAttribute("latestWorkout", latestWorkout);
+        }
+
+        if (!model.containsAttribute("workoutLog")) {
+            model.addAttribute("workoutLog", new WorkoutLog());
+        }
+
+        if (!model.containsAttribute("bodyStat")) {
+            model.addAttribute("bodyStat", new BodyStat());
+        }
     }
 }
